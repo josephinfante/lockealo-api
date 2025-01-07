@@ -94,15 +94,35 @@ npm run start
 
 The server will run on port `3000` (or whatever you specify in the `.env` file).
 
-### 6. Database Setup
+### 6. Creating Migrations and Seeders
 
 Use Sequelize CLI to manage migrations and seeders.
+
+**Note:** When creating the migrations and seeders make sure to have your `NODE_ENV` variable equal to `developlemt`. This is so the file gets created inside the `src` folder instead of the `dist` folder.
+
+The files will be created using `.js` extension, you will need to change the file extension to `.ts` and transform the content to TypeScript. You can check the current files as an example.
 
 **To generate a new migration:**
 
 ```bash
 npm run migrate:generate --name <migration_name>
 ```
+
+**To generate new seed data:**
+
+```bash
+npm run seed:generate --name <seed_name>
+```
+
+### 7. Running Migrations and Seeders
+
+When you want to run the migrations and seeders, you will need to build the project first. To build the project, run:
+
+```bash
+npm run build
+```
+
+This will create the `dist` folder containing the compiled JavaScript files. Before running the migrations and seeders, make sure to change the `NODE_ENV` variable to `production` in the `.env` file. This is so it reads the transpiled files instead of the original ones as sequelize-cli doesn't officially support TypeScript.
 
 **To run migrations:**
 
@@ -132,12 +152,6 @@ npm run migrate:undo:to <migration_name>
 
 ```bash
 npm run migrate:undo
-```
-
-**To generate new seed data:**
-
-```bash
-npm run seed:generate --name <seed_name>
 ```
 
 **To run seeders:**
