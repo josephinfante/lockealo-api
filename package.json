@@ -1,0 +1,50 @@
+{
+	"name": "lockealo-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"dev": "ts-node-dev --respawn --clear app.ts",
+		"build": "rimraf ./dist && tsc",
+		"start": "npm run build && node ./dist/app.js",
+		"postinstall": "npm run build",
+		"migrate:generate": "npx sequelize-cli migration:generate --name",
+		"migrate:up": "npx sequelize-cli db:migrate",
+		"migrate:up:to": "npx sequelize-cli db:migrate --to",
+		"migrate:undo:recent": "npx sequelize-cli db:migrate:undo",
+		"migrate:undo:to": "npx sequelize-cli db:migrate:undo:all --to",
+		"migrate:undo": "npx sequelize-cli db:migrate:undo:all",
+		"seed:generate": "npx sequelize-cli seed:generate --name",
+		"seed:up": "npx sequelize-cli db:seed:all",
+		"seed:up:to": "npx sequelize-cli db:seed --seed",
+		"seed:undo:recent": "npx sequelize-cli db:seed:undo",
+		"seed:undo:to": "npx sequelize-cli db:seed:undo --seed",
+		"seed:undo": "npx sequelize-cli db:seed:undo:all"
+	},
+	"keywords": [],
+	"author": "Joseph Infante",
+	"license": "ISC",
+	"dependencies": {
+		"bcrypt": "5.1.1",
+		"cors": "2.8.5",
+		"express": "4.21.2",
+		"jose": "5.9.6",
+		"pg": "8.13.1",
+		"pg-hstore": "2.3.4",
+		"qs": "6.13.1",
+		"sequelize": "6.37.5"
+	},
+	"devDependencies": {
+		"@types/bcrypt": "5.0.2",
+		"@types/cors": "2.8.17",
+		"@types/express": "5.0.0",
+		"@types/node": "22.10.5",
+		"@types/qs": "6.9.17",
+		"@types/sequelize": "4.28.20",
+		"prettier": "3.4.2",
+		"rimraf": "6.0.1",
+		"sequelize-cli": "6.6.2",
+		"ts-node-dev": "2.0.0",
+		"typescript": "5.7.2"
+	}
+}
