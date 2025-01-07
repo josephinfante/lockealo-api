@@ -4,9 +4,9 @@
 	"description": "",
 	"main": "app.js",
 	"scripts": {
-		"dev": "ts-node-dev --respawn --clear app.ts",
+		"dev": "ts-node-dev --env-file-if-exists=.env --respawn --clear app.ts",
 		"build": "rimraf ./dist && tsc",
-		"start": "npm run build && node ./dist/app.js",
+		"start": "npm run build && node --env-file-if-exists=.env ./dist/app.js",
 		"postinstall": "npm run build",
 		"migrate:generate": "npx sequelize-cli migration:generate --name",
 		"migrate:up": "npx sequelize-cli db:migrate",
