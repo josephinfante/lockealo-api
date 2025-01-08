@@ -1,6 +1,7 @@
 import express, { Application, Router } from 'express'
 import cors from 'cors'
 import { ACCEPTED_ORIGINS } from './config/envd'
+import { errorMiddleware } from './middlewares/error-middleware'
 
 interface ServerOption {
 	port?: number
@@ -36,6 +37,7 @@ export class Server {
 			}),
 		)
 		this.app.use(this.routes)
+		this.app.use(errorMiddleware)
 		this.app.listen(this.port, () => {
 			console.log(`Server running on port ${this.port}`)
 		})
