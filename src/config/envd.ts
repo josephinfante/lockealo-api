@@ -4,6 +4,8 @@ export const PORT = Number(process.env.PORT) || 3000
 export const ACCEPTED_ORIGINS = process.env.ACCEPTED_ORIGINS?.split(',') || ['http://localhost:3000']
 export const JWT_SECRET = process.env.JWT_SECRET || 'secret'
 export const SALT_ROUNDS = Number(process.env.SALT_ROUNDS) || 10
+export const CLIENT_URL = process.env.CLIENT_URL || ''
+export const HOST_URL = process.env.HOST_URL || 'http://localhost:3000'
 
 // DATABASE VARIABLES
 export const DB_NAME = process.env.DB_NAME || ''

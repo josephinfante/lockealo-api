@@ -1,14 +1,15 @@
+import { COMMON_MESSAGES } from '../../../data/common-messages'
 import { HTTP_STATUS } from '../../../data/http-status'
 import { AppError } from '../../../errors/app-error'
 import { ValidationError } from '../../../errors/validation-error'
 import { MethodReponse } from '../../../interfaces/method_response-interface'
-import { IUserCreate } from '../../../interfaces/user-interface'
+import { IUser, IUserCreate } from '../../../interfaces/user-interface'
 import { UsersModel } from '../../../models/users-model'
 import { Bcrypt } from '../../../utils/bcrypt'
 import { Generate } from '../../../utils/data-generator'
 import { Validators } from '../../../utils/validators'
 
-export const createUser = async ({ data }: { data: IUserCreate }): Promise<MethodReponse> => {
+export const createUser = async ({ data }: { data: IUserCreate }): Promise<MethodReponse<IUser>> => {
 	const { first_name, last_name, email, password } = data
 
 	const missing_fields: any[] = []
@@ -19,7 +20,9 @@ export const createUser = async ({ data }: { data: IUserCreate }): Promise<Metho
 	if (!last_name) missing_fields.push('last_name')
 
 	if (!email) missing_fields.push('email')
-	if (!Validators.isEmail(email)) validation_errors.email = { value: email, message: 'Invalid email format.' }
+	if (email) {
+		if (!Validators.isEmail(email)) validation_errors.email = { value: email, message: 'Invalid email format.' }
+	}
 
 	if (!password) missing_fields.push('password')
 	if (password) {
@@ -35,7 +38,7 @@ export const createUser = async ({ data }: { data: IUserCreate }): Promise<Metho
 
 	const hashed_password = await Bcrypt.hash(password)
 
-	const [_user, created] = await UsersModel.findOrCreate({
+	const [user, created] = await UsersModel.findOrCreate({
 		where: { email },
 		defaults: {
 			id: Generate.id(),
@@ -51,6 +54,16 @@ export const createUser = async ({ data }: { data: IUserCreate }): Promise<Metho
 		},
 	})
 
-	if (!created) throw new AppError('Could not create user.', HTTP_STATUS.CONFLICT)
-	return { status: HTTP_STATUS.CREATED, message: 'User created successfully.' }
+	if (!created && user?.dataValues.deleted) {
+		user.set({
+			first_name,
+			last_name,
+			password: hashed_password,
+			deleted: false,
+			updated_at: new Date(),
+		})
+		await user.save()
+	} else if (!created) throw new AppError(COMMON_MESSAGES.NOT_PROCESS, HTTP_STATUS.CONFLICT)
+
+	return { status: HTTP_STATUS.CREATED, data: user.dataValues }
 }
