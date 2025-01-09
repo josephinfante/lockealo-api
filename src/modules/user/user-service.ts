@@ -7,7 +7,7 @@ import { FindAllResponse } from '../../interfaces/find_all_response-interface'
 export class UserService {
 	constructor(private readonly repository: UserRepository) {}
 
-	async create({ data }: { data: IUserCreate }): Promise<MethodReponse> {
+	async create({ data }: { data: IUserCreate }): Promise<MethodReponse<IUser>> {
 		return await this.repository.create({ data })
 	}
 	async update({ id, data }: { id: string; data: IUserUpdate }): Promise<MethodReponse> {
@@ -24,5 +24,8 @@ export class UserService {
 	}
 	async findAll({ query }: { query: ParsedQs }): Promise<MethodReponse<FindAllResponse<Partial<IUser>>>> {
 		return await this.repository.findAll({ query })
+	}
+	async updateLastLogin({ id }: { id: string }): Promise<void> {
+		return await this.repository.updateLastLogin({ id })
 	}
 }

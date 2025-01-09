@@ -9,9 +9,10 @@ import { deleteUser } from './dtos/delete-user'
 import { findUser } from './dtos/find-user'
 import { findUserByEmail } from './dtos/find-user-by-email'
 import { findAllUsers } from './dtos/find-all-users'
+import { updateUserLastLogin } from './dtos/update-user-last-login'
 
 export class UserRepository implements IUserRepository {
-	async create({ data }: { data: IUserCreate }): Promise<MethodReponse> {
+	async create({ data }: { data: IUserCreate }): Promise<MethodReponse<IUser>> {
 		return await createUser({ data })
 	}
 	async update({ id, data }: { id: string; data: IUserUpdate }): Promise<MethodReponse> {
@@ -28,5 +29,8 @@ export class UserRepository implements IUserRepository {
 	}
 	async findAll({ query }: { query: ParsedQs }): Promise<MethodReponse<FindAllResponse<Partial<IUser>>>> {
 		return await findAllUsers({ query })
+	}
+	async updateLastLogin({ id }: { id: string }): Promise<void> {
+		return await updateUserLastLogin({ id })
 	}
 }
