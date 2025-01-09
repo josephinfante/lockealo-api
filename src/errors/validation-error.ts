@@ -1,5 +1,7 @@
+import { HTTP_STATUS } from '../data/http-status'
+
 export class ValidationError extends Error {
-	public readonly statusCode: number = 400
+	public readonly statusCode: number = HTTP_STATUS.BAD_REQUEST
 	public readonly metadata: any
 
 	constructor(message: string, metadata?: any) {
