@@ -73,9 +73,6 @@ export const findAllUsers = async ({
 			const created_after = new Date(query.created_after as string)
 			if (isNaN(created_after.getTime())) {
 				errors.created_after = query.created_after
-				// throw new ValidationError('Invalid value for created_after. Must be a valid date.', {
-				// 	created_after: query.created_after,
-				// })
 			}
 			where.push({ created_at: { [Op.gte]: created_after } })
 			filters.created_after = query.created_after
@@ -84,9 +81,6 @@ export const findAllUsers = async ({
 			const created_before = new Date(query.created_before as string)
 			if (isNaN(created_before.getTime())) {
 				errors.created_before = query.created_before
-				// throw new ValidationError('Invalid value for created_before. Must be a valid date.', {
-				// 	created_before: query.created_before,
-				// })
 			}
 			where.push({ created_at: { [Op.lte]: created_before } })
 			filters.created_before = query.created_before
@@ -98,9 +92,6 @@ export const findAllUsers = async ({
 			const updated_after = new Date(query.updated_after as string)
 			if (isNaN(updated_after.getTime())) {
 				errors.updated_after = query.updated_after
-				// throw new ValidationError('Invalid value for updated_after. Must be a valid date.', {
-				// 	updated_after: query.updated_after,
-				// })
 			}
 			where.push({ updated_at: { [Op.gte]: updated_after } })
 			filters.updated_after = query.updated_after
@@ -109,9 +100,6 @@ export const findAllUsers = async ({
 			const updated_before = new Date(query.updated_before as string)
 			if (isNaN(updated_before.getTime())) {
 				errors.updated_before = query.updated_before
-				// throw new ValidationError('Invalid value for updated_before. Must be a valid date.', {
-				// 	updated_before: query.updated_before,
-				// })
 			}
 			where.push({ updated_at: { [Op.lte]: updated_before } })
 			filters.updated_before = query.updated_before
