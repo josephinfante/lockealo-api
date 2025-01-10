@@ -1,22 +1,24 @@
 import { ParsedQs } from 'qs'
-import { MethodReponse } from '../../../interfaces/method_response-interface'
+import { IVault } from '../../../interfaces/vault-interface'
 import { FindAllResponse } from '../../../interfaces/find_all_response-interface'
-import { IUser } from '../../../interfaces/user-interface'
+import { MethodReponse } from '../../../interfaces/method_response-interface'
 import { Op } from 'sequelize'
-import { HTTP_STATUS } from '../../../data/http-status'
-import { UsersModel } from '../../../models/users-model'
 import { ValidationError } from '../../../errors/validation-error'
+import { VaultsModel } from '../../../models/vaults-model'
+import { HTTP_STATUS } from '../../../data/http-status'
 
-export const findAllUsers = async ({
+export const findAllVaults = async ({
 	query,
+	user_id,
 }: {
 	query: ParsedQs
-}): Promise<MethodReponse<FindAllResponse<Partial<IUser>>>> => {
+	user_id: string
+}): Promise<MethodReponse<FindAllResponse<Partial<IVault>>>> => {
 	const size = Math.max(1, query?.size ? Number(query.size) : 100)
 	const page = Math.max(1, query?.page ? Number(query.page) : 1)
 	const offset = (page - 1) * size
 
-	const allowed_sort_fields = ['first_name', 'last_name', 'email', 'created_at', 'updated_at']
+	const allowed_sort_fields = ['id', 'created_at', 'updated_at']
 	const default_sort_field = 'created_at'
 	const default_sort_order = 'DESC'
 
@@ -31,41 +33,9 @@ export const findAllUsers = async ({
 	const where: any = []
 	let filters: any = {}
 
-	if (query?.first_name) {
-		where.push({
-			first_name: {
-				[Op.iLike]: `%${query.first_name}%`,
-			},
-		})
-		filters.first_name = query.first_name
-	}
-
-	if (query?.last_name) {
-		where.push({
-			last_name: {
-				[Op.iLike]: `%${query.last_name}%`,
-			},
-		})
-		filters.last_name = query.last_name
-	}
-
-	if (query?.email) {
-		where.push({
-			email: {
-				[Op.iLike]: `%${query.email}%`,
-			},
-		})
-		filters.email = query.email
-	}
-
-	if (query?.hidden) {
-		where.push({ hidden: query?.hidden == 'true' })
-		filters.hidden = query?.hidden
-	}
-
-	if (query?.deleted) {
-		where.push({ deleted: query?.deleted == 'true' })
-		filters.deleted = query?.deleted
+	if (query?.id) {
+		where.push({ id: query.id })
+		filters.id = query.id
 	}
 
 	if (query?.created_after || query?.created_before) {
@@ -108,29 +78,28 @@ export const findAllUsers = async ({
 
 	if (Object.keys(errors).length > 0) throw new ValidationError('Invalid query parameters.', { ...errors })
 
+	where.push({ user_id })
 	const filterCondition = where.length ? { [Op.and]: where } : {}
 
-	const { count, rows } = await UsersModel.findAndCountAll({
+	const { count, rows } = await VaultsModel.findAndCountAll({
 		where: filterCondition,
 		order: [[sort_by, sort_order]],
 		limit: size,
 		offset,
 	})
 
-	const items = rows.map((user) => {
+	const items = rows.map((vault) => {
 		return {
-			id: user.dataValues.id,
-			first_name: user.dataValues.first_name,
-			last_name: user.dataValues.last_name,
-			email: user.dataValues.email,
-			hidden: user.dataValues.hidden,
-			deleted: user.dataValues.deleted,
-			created_at: user.dataValues.created_at,
-			updated_at: user.dataValues.updated_at,
+			id: vault.dataValues.id,
+			data: vault.dataValues.data,
+			salt: vault.dataValues.salt,
+			iv: vault.dataValues.iv,
+			created_at: vault.dataValues.created_at,
+			updated_at: vault.dataValues.updated_at,
 		}
 	})
 
-	const baseUrl = '/api/users'
+	const baseUrl = '/api/vaults'
 	const links = {
 		self: `${baseUrl}?page=${page}&size=${size}`,
 		...(page < Math.ceil(count / size) && { next: `${baseUrl}?page=${page + 1}&size=${size}` }),
