@@ -17,8 +17,8 @@ export class UserController {
 
 	delete = tryCatch(async (_req: Request, res: Response) => {
 		const { id } = res.locals.user
-		const { status, message } = await this.userService.delete({ id })
-		res.status(status).json({ message })
+		const { status } = await this.userService.delete({ id })
+		res.status(status).send()
 	})
 
 	findById = tryCatch(async (_req: Request, res: Response) => {
