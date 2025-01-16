@@ -1,7 +1,6 @@
 import express, { Application, Router } from 'express'
-import cors from 'cors'
-import { ACCEPTED_ORIGINS } from './config/envd'
 import { errorMiddleware } from './middlewares/error-middleware'
+import { corsMiddleware } from './middlewares/cors-middleware'
 
 interface ServerOption {
 	port?: number
@@ -23,19 +22,7 @@ export class Server {
 		this.app.set('trust proxy', true)
 		this.app.use(express.json())
 		this.app.use(express.urlencoded({ extended: true }))
-		this.app.use(
-			cors({
-				origin: (origin, callback) => {
-					if (!origin) return callback(null, true)
-					if (ACCEPTED_ORIGINS.includes(origin)) {
-						callback(null, true)
-						return
-					}
-					return callback(new Error('Not allowed by CORS'))
-				},
-				credentials: true,
-			}),
-		)
+		this.app.use(corsMiddleware)
 		this.app.use(this.routes)
 		this.app.use(errorMiddleware)
 		this.app.listen(this.port, () => {
