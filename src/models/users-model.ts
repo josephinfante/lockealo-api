@@ -27,6 +27,11 @@ UsersModel.init(
 			type: DataTypes.STRING(255),
 			allowNull: false,
 		},
+		is_verified: {
+			type: DataTypes.BOOLEAN,
+			allowNull: true,
+			defaultValue: () => 0,
+		},
 		last_login_at: {
 			type: DataTypes.DATE,
 			allowNull: true,
