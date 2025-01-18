@@ -21,6 +21,7 @@ export interface IUser {
 	last_name: string
 	email: string
 	password: string
+	is_verified: boolean
 	last_login_at: Date | null
 	hidden: boolean
 	deleted: boolean

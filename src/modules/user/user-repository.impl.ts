@@ -10,6 +10,8 @@ import { findUser } from './dtos/find-user'
 import { findUserByEmail } from './dtos/find-user-by-email'
 import { findAllUsers } from './dtos/find-all-users'
 import { updateUserLastLogin } from './dtos/update-user-last-login'
+import { verifyUser } from './dtos/verify-user'
+import { verifyUserStatus } from './dtos/verify-user-status'
 
 export class UserRepository implements IUserRepository {
 	async create({ data }: { data: IUserCreate }): Promise<MethodReponse<IUser>> {
@@ -32,5 +34,11 @@ export class UserRepository implements IUserRepository {
 	}
 	async updateLastLogin({ id }: { id: string }): Promise<void> {
 		return await updateUserLastLogin({ id })
+	}
+	async verify({ id, code }: { id: string; code: string }): Promise<MethodReponse> {
+		return await verifyUser({ id, code })
+	}
+	async verifyStatus({ id }: { id: string }): Promise<MethodReponse> {
+		return await verifyUserStatus({ id })
 	}
 }
