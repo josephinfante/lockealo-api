@@ -11,4 +11,6 @@ export interface IUserRepository {
 	findByEmail(email: string): Promise<MethodReponse<IUser>>
 	findAll({ query }: { query: ParsedQs }): Promise<MethodReponse<FindAllResponse<Partial<IUser>>>>
 	updateLastLogin({ id }: { id: string }): Promise<void>
+	verify({ id, code }: { id: string; code: string }): Promise<MethodReponse>
+	verifyStatus({ id }: { id: string }): Promise<MethodReponse>
 }
