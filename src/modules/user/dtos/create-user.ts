@@ -46,6 +46,7 @@ export const createUser = async ({ data }: { data: IUserCreate }): Promise<Metho
 			last_name,
 			email,
 			password: hashed_password,
+			is_verified: false,
 			last_login_at: null,
 			hidden: false,
 			deleted: false,
@@ -59,6 +60,7 @@ export const createUser = async ({ data }: { data: IUserCreate }): Promise<Metho
 			first_name,
 			last_name,
 			password: hashed_password,
+			is_verified: false,
 			deleted: false,
 			updated_at: new Date(),
 		})

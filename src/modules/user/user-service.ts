@@ -28,4 +28,10 @@ export class UserService {
 	async updateLastLogin({ id }: { id: string }): Promise<void> {
 		return await this.repository.updateLastLogin({ id })
 	}
+	async verify({ id, code }: { id: string; code: string }): Promise<MethodReponse> {
+		return await this.repository.verify({ id, code })
+	}
+	async verifyStatus({ id }: { id: string }): Promise<MethodReponse> {
+		return await this.repository.verifyStatus({ id })
+	}
 }

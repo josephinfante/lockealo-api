@@ -14,10 +14,11 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
 		const token_cookie = raw_cookies
 			.split(';')
-			.find((cookie) => cookie.startsWith('token='))
+			.find((cookie) => cookie.trim().startsWith('token='))
 			?.split('=')[1]
 
-		if (!token_cookie) throw new AuthError(COMMON_MESSAGES.NO_TOKEN)
+		if (!token_cookie || token_cookie.trim() === '' || token_cookie.trim() === 'undefined')
+			throw new AuthError(COMMON_MESSAGES.NO_TOKEN)
 
 		const { payload } = (await JWT.validate(token_cookie)) as JWTVerifyResult
 
